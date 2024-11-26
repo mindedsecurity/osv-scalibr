@@ -16,6 +16,8 @@
 package extractor
 
 import (
+	"fmt"
+
 	"github.com/google/osv-scalibr/plugin"
 	"github.com/google/osv-scalibr/purl"
 )
@@ -28,6 +30,30 @@ type Extractor interface {
 	// Ecosystem returns the Ecosystem of the given inventory created by this extractor.
 	// For software packages this corresponds to an OSV ecosystem value, e.g. PyPI.
 	Ecosystem(i *Inventory) string
+}
+
+// InventoryKey is a unique identifier for an inventory.
+type InventoryKey struct {
+	PURL string
+	Path string
+}
+
+// ToKey generates an InventoryKey from an Inventory. If the Inventory has no extractor, an error is
+// returned.
+func (i *Inventory) ToKey() (InventoryKey, error) {
+	location := ""
+	if i.Locations != nil && len(i.Locations) > 0 {
+		location = i.Locations[0]
+	}
+
+	if i.Extractor == nil {
+		return InventoryKey{}, fmt.Errorf("inventory has no extractor and cannot generate a PURL as part of the key")
+	}
+
+	return InventoryKey{
+		PURL: i.Extractor.ToPURL(i).String(),
+		Path: location,
+	}, nil
 }
 
 // LINT.IfChange
