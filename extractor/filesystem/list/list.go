@@ -60,6 +60,7 @@ import (
 	"github.com/google/osv-scalibr/extractor/filesystem/os/pacman"
 	"github.com/google/osv-scalibr/extractor/filesystem/os/rpm"
 	"github.com/google/osv-scalibr/extractor/filesystem/os/snap"
+	"github.com/google/osv-scalibr/extractor/filesystem/os/wordpress"
 	"github.com/google/osv-scalibr/extractor/filesystem/sbom/cdx"
 	"github.com/google/osv-scalibr/extractor/filesystem/sbom/spdx"
 	"github.com/google/osv-scalibr/log"
@@ -128,6 +129,7 @@ var (
 		pacman.New(pacman.DefaultConfig()),
 		flatpak.New(flatpak.DefaultConfig()),
 		homebrew.Extractor{},
+		wordpress.New(wordpress.DefaultConfig()),
 		macapps.New(macapps.DefaultConfig())}
 
 	// Collections of extractors.
