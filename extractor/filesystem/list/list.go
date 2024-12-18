@@ -30,6 +30,7 @@ import (
 	"github.com/google/osv-scalibr/extractor/filesystem/language/cpp/conanlock"
 	"github.com/google/osv-scalibr/extractor/filesystem/language/dart/pubspec"
 	"github.com/google/osv-scalibr/extractor/filesystem/language/dotnet/packageslockjson"
+	"github.com/google/osv-scalibr/extractor/filesystem/language/elixir"
 	"github.com/google/osv-scalibr/extractor/filesystem/language/erlang/mixlock"
 	"github.com/google/osv-scalibr/extractor/filesystem/language/golang/gobinary"
 	"github.com/google/osv-scalibr/extractor/filesystem/language/golang/gomod"
@@ -103,6 +104,8 @@ var (
 	Dart []filesystem.Extractor = []filesystem.Extractor{pubspec.Extractor{}}
 	// Erlang extractors.
 	Erlang []filesystem.Extractor = []filesystem.Extractor{mixlock.Extractor{}}
+	// Elixir extractors
+	Elixir []filesystem.Extractor = []filesystem.Extractor{elixir.New(elixir.DefaultConfig())}
 	// R extractors
 	R []filesystem.Extractor = []filesystem.Extractor{renvlock.Extractor{}}
 	// Ruby extractors.
@@ -142,6 +145,7 @@ var (
 		Python,
 		Go,
 		Dart,
+		Elixir,
 		Erlang,
 		PHP,
 		R,
@@ -162,6 +166,7 @@ var (
 		"go":         Go,
 		"dart":       Dart,
 		"erlang":     Erlang,
+		"elixir":     Elixir,
 		"r":          R,
 		"ruby":       Ruby,
 		"dotnet":     Dotnet,
