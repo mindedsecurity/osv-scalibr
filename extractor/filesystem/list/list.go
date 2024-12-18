@@ -41,6 +41,7 @@ import (
 	"github.com/google/osv-scalibr/extractor/filesystem/language/javascript/packagelockjson"
 	"github.com/google/osv-scalibr/extractor/filesystem/language/javascript/pnpmlock"
 	"github.com/google/osv-scalibr/extractor/filesystem/language/javascript/yarnlock"
+	objectivecpodfilelock "github.com/google/osv-scalibr/extractor/filesystem/language/objectivec"
 	"github.com/google/osv-scalibr/extractor/filesystem/language/php/composerlock"
 	"github.com/google/osv-scalibr/extractor/filesystem/language/python/pdmlock"
 	"github.com/google/osv-scalibr/extractor/filesystem/language/python/pipfilelock"
@@ -51,6 +52,8 @@ import (
 	"github.com/google/osv-scalibr/extractor/filesystem/language/ruby/gemfilelock"
 	"github.com/google/osv-scalibr/extractor/filesystem/language/ruby/gemspec"
 	"github.com/google/osv-scalibr/extractor/filesystem/language/rust/cargolock"
+	"github.com/google/osv-scalibr/extractor/filesystem/language/swift/packageresolved"
+	podfilelock "github.com/google/osv-scalibr/extractor/filesystem/language/swift/podfile"
 	"github.com/google/osv-scalibr/extractor/filesystem/os/apk"
 	"github.com/google/osv-scalibr/extractor/filesystem/os/cos"
 	"github.com/google/osv-scalibr/extractor/filesystem/os/dpkg"
@@ -99,6 +102,8 @@ var (
 		gobinary.New(gobinary.DefaultConfig()),
 		&gomod.Extractor{},
 	}
+	// ObjectiveC extractors.
+	ObjectiveC []filesystem.Extractor = []filesystem.Extractor{objectivecpodfilelock.Extractor{}}
 	// Dart extractors.
 	Dart []filesystem.Extractor = []filesystem.Extractor{pubspec.Extractor{}}
 	// Erlang extractors.
@@ -113,6 +118,11 @@ var (
 	SBOM []filesystem.Extractor = []filesystem.Extractor{&cdx.Extractor{}, &spdx.Extractor{}}
 	// Dotnet (.NET) extractors.
 	Dotnet []filesystem.Extractor = []filesystem.Extractor{packageslockjson.New(packageslockjson.DefaultConfig())}
+	// Swift extractors.
+	Swift []filesystem.Extractor = []filesystem.Extractor{
+		podfilelock.Extractor{},
+		packageresolved.Extractor{},
+	}
 	// PHP extractors.
 	PHP []filesystem.Extractor = []filesystem.Extractor{&composerlock.Extractor{}}
 	// Containers extractors.
