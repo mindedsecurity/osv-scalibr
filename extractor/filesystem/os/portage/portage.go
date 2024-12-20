@@ -157,8 +157,6 @@ func (e Extractor) extractFromInput(ctx context.Context, input *filesystem.ScanI
 		log.Errorf("osrelease.GetOSRelease(): %v", err)
 	}
 
-	pkgs := []*extractor.Inventory{}
-
 	var pf string
 
 	s := bufio.NewScanner(input.Reader)
@@ -166,9 +164,11 @@ func (e Extractor) extractFromInput(ctx context.Context, input *filesystem.ScanI
 		line := s.Text()
 		pf = strings.TrimSpace(string(line))
 	}
+
+	inventories := []*extractor.Inventory{}
 	if err != nil {
 		log.Errorf("unable to read file %s: %v", input.Path, err)
-		return pkgs, err
+		return inventories, err
 	}
 
 	if pf == "" {
@@ -178,7 +178,7 @@ func (e Extractor) extractFromInput(ctx context.Context, input *filesystem.ScanI
 	pkgName, pkgVersion := splitPackageAndVersion(pf)
 	if pkgName == "" || pkgVersion == "" {
 		log.Errorf("no package name or version")
-		return pkgs, err
+		return inventories, err
 	}
 
 	i := &extractor.Inventory{
@@ -193,9 +193,9 @@ func (e Extractor) extractFromInput(ctx context.Context, input *filesystem.ScanI
 		Locations: []string{input.Path},
 	}
 
-	pkgs = append(pkgs, i)
+	inventories = append(inventories, i)
 
-	return pkgs, nil
+	return inventories, nil
 }
 
 func splitPackageAndVersion(path string) (string, string) {
