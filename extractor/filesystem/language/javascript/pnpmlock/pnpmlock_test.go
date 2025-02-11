@@ -1,4 +1,4 @@
-// Copyright 2024 Google LLC
+// Copyright 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -63,6 +63,11 @@ func TestExtractor_FileRequired(t *testing.T) {
 			inputPath: "path.to.my.pnpm-lock.yaml",
 			want:      false,
 		},
+		{
+			name:      "",
+			inputPath: "foo/node_modules/bar/pnpn-lock.yaml",
+			want:      false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -83,15 +88,61 @@ func TestExtractor_Extract(t *testing.T) {
 				Path: "testdata/not-yaml.txt",
 			},
 			WantErr:       extracttest.ContainsErrStr{Str: "could not extract from"},
-			WantInventory: []*extractor.Inventory{},
+			WantInventory: nil,
 		},
 		{
 			Name: "invalid dep path",
 			InputConfig: extracttest.ScanInputMockConfig{
 				Path: "testdata/invalid-path.yaml",
 			},
-			WantErr:       extracttest.ContainsErrStr{Str: "invalid dependency path"},
-			WantInventory: []*extractor.Inventory{},
+			WantErr: extracttest.ContainsErrStr{Str: "invalid dependency path"},
+			WantInventory: []*extractor.Inventory{
+				{
+					Name:       "acorn",
+					Version:    "8.7.0",
+					Locations:  []string{"testdata/invalid-path.yaml"},
+					SourceCode: &extractor.SourceCodeIdentifier{},
+					Metadata: osv.DepGroupMetadata{
+						DepGroupVals: []string{},
+					},
+				},
+			},
+		},
+		{
+			Name: "invalid dep paths (first error)",
+			InputConfig: extracttest.ScanInputMockConfig{
+				Path: "testdata/invalid-paths.yaml",
+			},
+			WantErr: extracttest.ContainsErrStr{Str: "invalid dependency path: invalidpath1"},
+			WantInventory: []*extractor.Inventory{
+				{
+					Name:       "acorn",
+					Version:    "8.7.0",
+					Locations:  []string{"testdata/invalid-paths.yaml"},
+					SourceCode: &extractor.SourceCodeIdentifier{},
+					Metadata: osv.DepGroupMetadata{
+						DepGroupVals: []string{},
+					},
+				},
+			},
+		},
+		{
+			Name: "invalid dep paths (second error)",
+			InputConfig: extracttest.ScanInputMockConfig{
+				Path: "testdata/invalid-paths.yaml",
+			},
+			WantErr: extracttest.ContainsErrStr{Str: "invalid dependency path: invalidpath2"},
+			WantInventory: []*extractor.Inventory{
+				{
+					Name:       "acorn",
+					Version:    "8.7.0",
+					Locations:  []string{"testdata/invalid-paths.yaml"},
+					SourceCode: &extractor.SourceCodeIdentifier{},
+					Metadata: osv.DepGroupMetadata{
+						DepGroupVals: []string{},
+					},
+				},
+			},
 		},
 		{
 			Name: "empty",

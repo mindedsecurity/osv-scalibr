@@ -1,4 +1,4 @@
-// Copyright 2024 Google LLC
+// Copyright 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -85,31 +85,31 @@ func TestFileRequired(t *testing.T) {
 	}
 }
 
-const NixVicuna = `ANSI_COLOR="1;34"
-BUG_REPORT_URL="https://github.com/NixOS/nixpkgs/issues"
-BUILD_ID="24.11.710315.b681065d0919"
-CPE_NAME="cpe:/o:nixos:nixos:24.11"
-DEFAULT_HOSTNAME=nixos
-DOCUMENTATION_URL="https://nixos.org/learn.html"
-HOME_URL="https://nixos.org/"
-ID=nixos
-ID_LIKE=""
-IMAGE_ID=""
-IMAGE_VERSION=""
-LOGO="nix-snowflake"
-NAME=NixOS
-PRETTY_NAME="NixOS 24.11 (Vicuna)"
-SUPPORT_END="2025-06-30"
-SUPPORT_URL="https://nixos.org/community.html"
-VARIANT=""
-VARIANT_ID=""
-VENDOR_NAME="NixOS"
-VENDOR_URL="https://nixos.org/"
-VERSION="24.11 (Vicuna)"
-VERSION_CODENAME=vicuna
-VERSION_ID="24.11"`
-
 func TestExtract(t *testing.T) {
+	const NixVicuna = `ANSI_COLOR="1;34"
+	BUG_REPORT_URL="https://github.com/NixOS/nixpkgs/issues"
+	BUILD_ID="24.11.710315.b681065d0919"
+	CPE_NAME="cpe:/o:nixos:nixos:24.11"
+	DEFAULT_HOSTNAME=nixos
+	DOCUMENTATION_URL="https://nixos.org/learn.html"
+	HOME_URL="https://nixos.org/"
+	ID=nixos
+	ID_LIKE=""
+	IMAGE_ID=""
+	IMAGE_VERSION=""
+	LOGO="nix-snowflake"
+	NAME=NixOS
+	PRETTY_NAME="NixOS 24.11 (Vicuna)"
+	SUPPORT_END="2025-06-30"
+	SUPPORT_URL="https://nixos.org/community.html"
+	VARIANT=""
+	VARIANT_ID=""
+	VENDOR_NAME="NixOS"
+	VENDOR_URL="https://nixos.org/"
+	VERSION="24.11 (Vicuna)"
+	VERSION_CODENAME=vicuna
+	VERSION_ID="24.11"`
+
 	tests := []struct {
 		name             string
 		path             string

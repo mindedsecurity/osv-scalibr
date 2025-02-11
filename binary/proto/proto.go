@@ -1,4 +1,4 @@
-// Copyright 2024 Google LLC
+// Copyright 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -42,7 +42,9 @@ import (
 	"github.com/google/osv-scalibr/extractor/filesystem/os/cos"
 	"github.com/google/osv-scalibr/extractor/filesystem/os/dpkg"
 	"github.com/google/osv-scalibr/extractor/filesystem/os/flatpak"
+	"github.com/google/osv-scalibr/extractor/filesystem/os/homebrew"
 	"github.com/google/osv-scalibr/extractor/filesystem/os/kernel/module"
+	"github.com/google/osv-scalibr/extractor/filesystem/os/kernel/vmlinuz"
 	"github.com/google/osv-scalibr/extractor/filesystem/os/macapps"
 	"github.com/google/osv-scalibr/extractor/filesystem/os/nix"
 	"github.com/google/osv-scalibr/extractor/filesystem/os/pacman"
@@ -383,9 +385,13 @@ func setProtoMetadata(meta any, i *spb.Inventory) {
 				UpdateUrl:                m.KSUpdateURL,
 			},
 		}
+	case *homebrew.Metadata:
+		i.Metadata = &spb.Inventory_HomebrewMetadata{
+			HomebrewMetadata: &spb.HomebrewPackageMetadata{},
+		}
 	case *module.Metadata:
-		i.Metadata = &spb.Inventory_ModuleMetadata{
-			ModuleMetadata: &spb.ModuleMetadata{
+		i.Metadata = &spb.Inventory_KernelModuleMetadata{
+			KernelModuleMetadata: &spb.KernelModuleMetadata{
 				PackageName:                    m.PackageName,
 				PackageVersion:                 m.PackageVersion,
 				PackageVermagic:                m.PackageVermagic,
@@ -393,7 +399,23 @@ func setProtoMetadata(meta any, i *spb.Inventory) {
 				OsId:                           m.OSID,
 				OsVersionCodename:              m.OSVersionCodename,
 				OsVersionId:                    m.OSVersionID,
-				PackageAuthor:                  m.PackageAuthor,
+				PackageAuthor:                  m.PackageAuthor},
+		}
+	case *vmlinuz.Metadata:
+		i.Metadata = &spb.Inventory_VmlinuzMetadata{
+			VmlinuzMetadata: &spb.VmlinuzMetadata{
+				Name:              m.Name,
+				Version:           m.Version,
+				Architecture:      m.Architecture,
+				ExtendedVersion:   m.ExtendedVersion,
+				Format:            m.Format,
+				SwapDevice:        m.SwapDevice,
+				RootDevice:        m.RootDevice,
+				VideoMode:         m.VideoMode,
+				OsId:              m.OSID,
+				OsVersionCodename: m.OSVersionCodename,
+				OsVersionId:       m.OSVersionID,
+				RwRootFs:          m.RWRootFS,
 			},
 		}
 	case *ctrdfs.Metadata:

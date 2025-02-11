@@ -1,4 +1,4 @@
-// Copyright 2024 Google LLC
+// Copyright 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -48,11 +48,10 @@ func TestConvertV1Layer(t *testing.T) {
 			command: "ADD file",
 			isEmpty: false,
 			wantLayer: &Layer{
-				// The diffID is the encoded string: digest.FromString("abc123").
-				diffID:       "sha256:27f2fb5c8ba6b6d955cbc3cd78e89a898cac60a0442260129235683f4cc74e90",
+				v1Layer:      fakev1layer.New("abc123", "ADD file", false, reader),
+				diffID:       "sha256:abc123",
 				buildCommand: "ADD file",
 				isEmpty:      false,
-				uncompressed: reader,
 			},
 		},
 		{
@@ -78,7 +77,7 @@ func TestConvertV1Layer(t *testing.T) {
 			if tc.wantError != nil && gotError == tc.wantError {
 				t.Errorf("convertV1Layer(%v, %v, %v) returned error: %v, want error: %v", tc.v1Layer, tc.command, tc.isEmpty, gotError, tc.wantError)
 			}
-			if diff := cmp.Diff(gotLayer, tc.wantLayer, cmp.AllowUnexported(Layer{})); tc.wantLayer != nil && diff != "" {
+			if diff := cmp.Diff(gotLayer, tc.wantLayer, cmp.AllowUnexported(Layer{}, fakev1layer.FakeV1Layer{})); tc.wantLayer != nil && diff != "" {
 				t.Errorf("convertV1Layer(%v, %v, %v) returned layer: %v, want layer: %v", tc.v1Layer, tc.command, tc.isEmpty, gotLayer, tc.wantLayer)
 			}
 		})
@@ -177,7 +176,7 @@ func TestChainFSOpen(t *testing.T) {
 		wantErr  error
 	}{
 		{
-			name: "non-existent tree",
+			name: "nonexistent tree",
 			chainfs: FS{
 				tree: nil,
 			},
@@ -265,9 +264,9 @@ func TestChainFSOpen(t *testing.T) {
 			},
 		},
 		{
-			name:    "error opening symlink due to non-existent target",
+			name:    "error opening symlink due to nonexistent target",
 			chainfs: populatedChainFS,
-			path:    "/symlink-to-non-existent-file",
+			path:    "/symlink-to-nonexistent-file",
 			wantErr: fs.ErrNotExist,
 		},
 		{
@@ -318,7 +317,7 @@ func TestChainFSStat(t *testing.T) {
 		wantErr      error
 	}{
 		{
-			name: "non-existent tree",
+			name: "nonexistent tree",
 			chainfs: FS{
 				tree: nil,
 			},
@@ -375,7 +374,7 @@ func TestChainFSReadDir(t *testing.T) {
 		wantErr   error
 	}{
 		{
-			name: "read directory from non-existent tree",
+			name: "read directory from nonexistent tree",
 			chainfs: FS{
 				tree: nil,
 			},
@@ -480,10 +479,10 @@ func TestChainFSReadDir(t *testing.T) {
 				{
 					extractDir:    extractDir,
 					originLayerID: "layer2",
-					virtualPath:   "/symlink-to-non-existent-file",
+					virtualPath:   "/symlink-to-nonexistent-file",
 					isWhiteout:    false,
 					mode:          fs.ModeSymlink,
-					targetPath:    "/non-existent-file",
+					targetPath:    "/nonexistent-file",
 				},
 				{
 					extractDir:    extractDir,
@@ -712,13 +711,13 @@ func setUpChainFS(t *testing.T, maxSymlinkDepth int) (FS, string) {
 			mode:          fs.ModeSymlink,
 			targetPath:    "/dir2",
 		},
-		"/symlink-to-non-existent-file": &fileNode{
+		"/symlink-to-nonexistent-file": &fileNode{
 			extractDir:    tempDir,
 			originLayerID: "layer2",
-			virtualPath:   "symlink-to-non-existent-file",
+			virtualPath:   "symlink-to-nonexistent-file",
 			isWhiteout:    false,
 			mode:          fs.ModeSymlink,
-			targetPath:    "/non-existent-file",
+			targetPath:    "/nonexistent-file",
 		},
 		"/symlink-cycle1": &fileNode{
 			extractDir:    tempDir,

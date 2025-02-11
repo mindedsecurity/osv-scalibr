@@ -1,4 +1,4 @@
-// Copyright 2024 Google LLC
+// Copyright 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,9 @@
 package fs
 
 import (
+	"bytes"
+	"fmt"
+	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -79,4 +82,23 @@ func RealFSScanRoots(path string) []*ScanRoot {
 // filesystem SCALIBR is running on.
 func RealFSScanRoot(path string) *ScanRoot {
 	return &ScanRoot{FS: DirFS(path), Path: path}
+}
+
+// NewReaderAt converts an io.Reader into an io.ReaderAt.
+func NewReaderAt(ioReader io.Reader) (io.ReaderAt, error) {
+	r, ok := ioReader.(io.ReaderAt)
+	if ok {
+		return r, nil
+	}
+
+	// Fallback: In case ioReader does not implement ReadAt, we use a reader on byte buffer
+	// instead, which supports ReadAt. Note that in this case the whole file contents will be
+	// loaded into memory which might be expensive for large files.
+	buff := bytes.NewBuffer([]byte{})
+	_, err := io.Copy(buff, ioReader)
+	if err != nil {
+		return nil, fmt.Errorf("io.Copy(): %w", err)
+	}
+
+	return bytes.NewReader(buff.Bytes()), nil
 }

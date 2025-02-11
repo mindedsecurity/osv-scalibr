@@ -1,4 +1,4 @@
-// Copyright 2024 Google LLC
+// Copyright 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package whiteout
 import (
 	"fmt"
 	"io/fs"
+	"path"
 	"path/filepath"
 	"strings"
 
@@ -39,6 +40,8 @@ func Files(scalibrfs scalibrfs.FS) (map[string]struct{}, error) {
 
 	err := fs.WalkDir(scalibrfs, ".", func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
+			// Continue walking if there is an error.
+			//nolint:nilerr
 			return nil
 		}
 
@@ -58,4 +61,33 @@ func Files(scalibrfs scalibrfs.FS) (map[string]struct{}, error) {
 		return nil, fmt.Errorf("failed to successfully walk fs to find whiteout files: %w", err)
 	}
 	return whiteouts, nil
+}
+
+// IsWhiteout returns true if a path is a whiteout path.
+func IsWhiteout(p string) bool {
+	_, file := path.Split(p)
+	return strings.HasPrefix(file, WhiteoutPrefix)
+}
+
+// ToWhiteout returns the whiteout version of a path.
+func ToWhiteout(p string) string {
+	dir, file := path.Split(p)
+	return path.Join(dir, fmt.Sprintf("%s%s", WhiteoutPrefix, file))
+}
+
+// ToPath returns the non whiteout version of a path.
+func ToPath(p string) string {
+	dir, file := path.Split(p)
+
+	if strings.HasPrefix(file, WhiteoutPrefix) {
+		file = strings.TrimPrefix(file, WhiteoutPrefix)
+	}
+
+	nonWhitoutPath := path.Join(dir, file)
+
+	if dir != "" && file == "" {
+		nonWhitoutPath = fmt.Sprintf("%s/", nonWhitoutPath)
+	}
+
+	return nonWhitoutPath
 }

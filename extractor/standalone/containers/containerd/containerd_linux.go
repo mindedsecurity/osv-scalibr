@@ -1,4 +1,4 @@
-// Copyright 2024 Google LLC
+// Copyright 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -192,7 +192,7 @@ func containersFromAPI(ctx context.Context, client CtrdClient) ([]Metadata, erro
 
 func namespacesFromAPI(ctx context.Context, client CtrdClient) ([]string, error) {
 	nsService := client.NamespaceService()
-	nss, err := nsService.List(context.Background())
+	nss, err := nsService.List(ctx)
 	if err != nil {
 		return nil, err
 	}

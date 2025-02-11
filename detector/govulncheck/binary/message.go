@@ -1,4 +1,4 @@
-// Copyright 2024 Google LLC
+// Copyright 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -35,19 +35,19 @@ type govulncheckFrame struct {
 // in https://go.dev/security/vuln/database#schema.
 type osvEntry struct {
 	// ID is a unique identifier for the vulnerability.
-	ID string
+	ID string `json:"id"`
 	// Aliases is a list of IDs for the same vulnerability in other
 	// databases (CVE, GHSA)
-	Aliases []string
+	Aliases []string `json:"aliases"`
 	// Summary gives a one-line, English textual summary of the vulnerability.
 	// It is recommended that this field be kept short, on the order of no more
 	// than 120 characters.
-	Summary string
+	Summary string `json:"summary"`
 	// Details contains additional English textual details about the vulnerability.
-	Details string
+	Details string `json:"details"`
 	// Affected contains information on the modules and versions
 	// affected by the vulnerability.
-	Affected []affected
+	Affected []affected `json:"affects"`
 }
 
 type affected struct {

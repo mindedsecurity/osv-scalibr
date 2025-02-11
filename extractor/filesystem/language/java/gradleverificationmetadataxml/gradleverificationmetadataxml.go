@@ -1,4 +1,4 @@
-// Copyright 2024 Google LLC
+// Copyright 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -64,7 +64,7 @@ func (e Extractor) Extract(ctx context.Context, input *filesystem.ScanInput) ([]
 	err := xml.NewDecoder(input.Reader).Decode(&parsedLockfile)
 
 	if err != nil {
-		return []*extractor.Inventory{}, fmt.Errorf("could not extract from %s: %w", input.Path, err)
+		return nil, fmt.Errorf("could not extract from %s: %w", input.Path, err)
 	}
 
 	pkgs := make([]*extractor.Inventory, 0, len(parsedLockfile.Components))

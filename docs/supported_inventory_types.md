@@ -14,7 +14,8 @@ SCALIBR supports extracting software package information from a variety of OS an
 * RPM (used by e.g. RHEL, CentOS, Rocky Linux)
   * Zypper (used by e.g. openSUSE)
 * Pacman (used by e.g. Arch Linux)
-* Kernel (modules, .ko)
+* Kernel modules (.ko)
+* Kernel archives (vmlinuz)
 * Portage (used by e.g. Gentoo Linux)
 * SNAP
 * Flatpak
@@ -42,18 +43,24 @@ SCALIBR supports extracting software package information from a variety of OS an
 * Go
   * Go binaries
   * go.mod (OSV)
+* Haskell
+  * stack.yaml.lock
+  * cabal.project.freeze
 * Java
   * Java archives
   * Lockfiles: pom.xml, gradle.lockfile, verification-metadata.xml
 * Javascript
   * Installed NPM packages (package.json)
-  * Lockfiles: package-lock.json, yarn.lock, pnpm-lock.yaml
+  * Lockfiles: package-lock.json, yarn.lock, pnpm-lock.yaml, bun.lock
+* ObjectiveC
+  * Podfile.lock
 * PHP:
   * Composer
 * Python
   * Installed PyPI packages (global and venv)
   * Lockfiles: requirements.txt, poetry.lock, Pipfile.lock, pdm.lock
   * Conda packages
+  * setup.py
 * R
   * Lockfiles: renv.lock
 * Ruby
@@ -61,6 +68,10 @@ SCALIBR supports extracting software package information from a variety of OS an
   * Lockfiles: Gemfile.lock (OSV)
 * Rust
   * Cargo.lock
+  * Rust binaries
+* Swift
+  * Podfile.lock
+  * Package.resolved
 
 ## Container inventory
 

@@ -1,4 +1,4 @@
-// Copyright 2024 Google LLC
+// Copyright 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -107,7 +107,7 @@ func (e Extractor) Extract(ctx context.Context, input *filesystem.ScanInput) ([]
 	}
 
 	if err := scanner.Err(); err != nil {
-		return []*extractor.Inventory{}, fmt.Errorf("failed to read: %w", err)
+		return nil, fmt.Errorf("failed to read: %w", err)
 	}
 
 	return pkgs, nil
